@@ -1,2 +1,2 @@
 # Welcome to Digital Business Cards
-Hello How Are Khana Khake Jana Ho..!
+Go to the dbc.khush.pro to access the product...
