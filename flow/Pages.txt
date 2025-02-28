@@ -1,0 +1,23 @@
+Home: 
+	total-cards (number)
+	your-profile
+	quick-search (search by city only)
+
+AddCard: 
+	Add the card from user
+	[add card module]
+
+Searchcards:
+	search cards based on keywords
+	[search card module]
+	
+ManageCards:
+	simply manage cards - remove, edit
+	[remove and edit modules]
+	
+Community:
+	- Shoutbox - chatbox
+
+AboutUs
+
+ContactUs
