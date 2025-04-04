@@ -1,5 +1,3 @@
-const querystring = require('node:querystring');
-
 class ApiFeatures {
   //query = Model.find()
   //QueryString = parameters
@@ -8,7 +6,8 @@ class ApiFeatures {
     this.queryString = queryString;
   }
 
-  //filter is used to remove all our filter parameters and filter the query based on the condition (field[gt]=value)
+  //=>
+  // 1. filter is used to remove all our filter parameters and filter the query based on the condition (field[gt]=value)
   filter() {
     const queryStr = { ...this.queryString };
     const excludeFields = ['page', 'limit', 'sortBy', 'fields'];
@@ -27,7 +26,8 @@ class ApiFeatures {
     return this;
   }
 
-  //fields - Just like the select query in SQL, select the limited fields
+  //=>
+  // 2. fields - Just like the select query in SQL, select the limited fields
   selectFields() {
     if (this.queryString.fields) {
       const fields = this.queryString.fields;
@@ -38,12 +38,29 @@ class ApiFeatures {
     return this;
   }
 
-  //sorting the fields
+  //=>
+  // 3. sorting the fields
   sort() {
-    if (this.queryString.sort) {
+    if (this.queryString.sortBy) {
       const sortBy = this.queryString.sortBy.split(',').join(' ');
       this.query = this.query.sort(sortBy);
+    } else {
+      this.query = this.query.sort('-createdAt');
     }
+
+    return this;
+  }
+
+  //=>
+  // 4. Pagination based on page number and limit
+  paginate() {
+    const page = this.queryString.page * 1 || 1;
+    const limit = this.queryString.limit * 1 || 10;
+    const skip = (page - 1) * limit;
+
+    this.query = this.query.skip(skip).limit(limit);
+
+    return this;
   }
 }
 
