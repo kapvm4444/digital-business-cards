@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 const express = require('express');
 const morgan = require('morgan');
 
@@ -6,6 +8,10 @@ import globalErrorHandler from './controllers/errorController';
 
 //express app
 const app = express();
+
+//setting the view engine for rendering the email templates
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'email-views'));
 
 //development tool for the request log
 app.use(morgan('dev'));
