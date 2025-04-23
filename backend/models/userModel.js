@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     dialCode: {
       type: String,
-      required: [true, 'Mobile number is required'],
+      required: [true, 'DialCode is required'],
     },
     mobile: {
       type: Number,
@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Password is required'],
       min: 8,
       max: 64,
+      select: false,
     },
     passwordConfirm: {
       type: String,
@@ -60,6 +61,7 @@ const userSchema = new mongoose.Schema(
         },
         'Password and PasswordConfirm must be same',
       ],
+      select: false,
     },
     passwordResetToken: String,
     passwordResetExpire: Date,
@@ -68,6 +70,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    deletedAt: Date,
   },
   {
     toJSON: { virtuals: true },
@@ -125,6 +128,18 @@ userSchema.methods.getPasswordResetToken = function () {
 
   //return the passwordResetToken (not hashed) (need to hash it again at the time of resetting it)
   return token;
+};
+
+userSchema.methods.isPasswordChanged = function (JwtTokenTime) {
+  if (this.passwordChangedAt) {
+    const passwordChangedTime = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+    );
+
+    return JwtTokenTime < passwordChangedTime;
+  }
+
+  return false;
 };
 
 //=>

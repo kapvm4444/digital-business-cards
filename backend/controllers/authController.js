@@ -1,36 +1,128 @@
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
+const User = require('./../models/userModel');
+const { promisify } = require('util');
+
 const jwt = require('jsonwebtoken');
 
 //=>
-// signup
-// login
-// protect
-// restrictTo
-// create and send token
-// me
-// update-me
-// delete-me
+// signup -
+// login -
+// protect -
+// restrictTo -
+// create and send token -
+// me -
+// update-me -
+// delete-me -
 // forgot-password
 // reset-password
 // update-password
 
 //=>
 // create JWT token
-const getToken = (id) => {
-  return jwt.sign(id, process.env.JWT_SECRET, {
+const getJWTToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
 
 //=>
 // send Token
-const createSendToken = () => {};
+const createSendToken = (userData, req, res, statusCode) => {
+  //get the JWT token for sending it to user
+  const token = getJWTToken(userData._id);
+
+  //create cookie options
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
+    ),
+    httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+  };
+
+  //send the cookie
+  res.cookie('jwt', token, cookieOptions);
+
+  //send the response with token
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: userData,
+  });
+};
 
 //=>
 // signup
-exports.signup = (req, res, next) => {
+exports.signup = catchAsync(async (req, res, next) => {
   // get the details of users
-  // filter/sanitize the data
+  if (req.body.role) req.body.role = undefined;
+  const userData = req.body;
+
   // save the data to database
+  const data = await User.create(userData);
+
   // log in the user
+  createSendToken(data, req, res, 201);
+});
+
+//=>
+// Login User
+exports.login = catchAsync(async (req, res, next) => {
+  //get the email and password
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return next(new AppError(400, 'Please provide email and password both'));
+
+  //check if user with email is available or not and check the password
+  const user = await User.findOne({ email }).select('+password');
+  if (!user || !(await user.checkPassword(password, user.password)))
+    return next(new AppError(401, 'Email or password incorrect'));
+
+  //log in with token
+  createSendToken(user, req, res, 200);
+});
+
+//=>
+// Protect (a middleware)
+exports.protect = catchAsync(async (req, res, next) => {
+  //get the token from cookies
+  const token = req.cookies.jwt;
+  if (!token)
+    return next(
+      new AppError(403, 'You are not logged in, please login to continue'),
+    );
+
+  //decode the token and check if token is valid or not
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  //check if the user with the id is available or not
+  const user = await User.findById(decoded.id);
+  if (!user)
+    return next(new AppError(401, 'User does not exist, please log in again'));
+
+  //check if user changed the password before logging in or not?
+  if (user.isPasswordChanged(decoded.iat))
+    return next(
+      new AppError(401, 'Your password is changed, please log in again'),
+    );
+
+  //set the user with req object
+  req.user = user;
+
+  next();
+});
+
+//=>
+// restrictTo
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role))
+      return next(
+        new AppError(403, 'You are not authorized to use this resource'),
+      );
+
+    next();
+  };
 };
