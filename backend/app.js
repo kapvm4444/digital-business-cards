@@ -4,6 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 import userRouter from './routers/userRouter';
+import cardRouter from './routers/cardRouter';
 import globalErrorHandler from './controllers/errorController';
 
 //express app
@@ -46,6 +47,7 @@ app.use(express.static('public'));
 // /favorites
 
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/cards', cardRouter);
 
 app.use(globalErrorHandler);
 

@@ -126,3 +126,58 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+//=>
+// Update-password
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  //1. get the values
+  const { currentPassword, newPassword, newPasswordConfirm } = req.body;
+
+  //2. check if old password is correct or not
+  const user = await User.findById(req.user._id).select('+password');
+  if (!user)
+    return next(new AppError(401, 'Something went wrong, please log in again'));
+
+  if (!(await user.checkPassword(currentPassword, user.password)))
+    return next(new AppError(401, 'Your current Password is incorrect'));
+
+  //3. check if new pass is not same as old pass
+  if (newPassword === currentPassword)
+    return next(
+      new AppError(401, 'New Password must not be same as the old password'),
+    );
+
+  //4. Update and save the password
+  user.password = newPassword;
+  user.passwordConfirm = newPasswordConfirm;
+  await user.save();
+
+  createSendToken(user, req, res, 200);
+});
+
+//=>
+// forgot-password
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  //get the email from the body
+  //check if user with that email exists or not
+  //get password reset token and set password reset token expire time of 20 mins [note: token is not hashed, need to hash in reset password]
+  //send the email with the password reset link and send a message that token is sent in response
+});
+
+//=>
+// check password reset token (middleware)
+exports.checkResetToken = catchAsync(async (req, res, next) => {
+  // get the token from url and hash the token
+  // crypto.createHash('sha-256').update(token).digest('hex')
+  // check if user with that token exists or not and also check if it is expired or not
+  next();
+});
+
+//=>
+// reset-password
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // get the user from the token
+  // get the data of new password and new password confirm from body
+  // check if password and confirm password are same or not
+  // update the password in user and save it (and send confirm msg in response)
+});

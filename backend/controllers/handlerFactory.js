@@ -5,8 +5,12 @@ const ApiFeature = require('./../utils/apiFeatures');
 // get all the doc
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
+    //for getting the user specific favorites
+    let filter = {};
+    if (req.params.userId) filter = { ...filter, user: req.params.userId };
+
     // const docs = await Model.find();
-    const features = new ApiFeature(Model.find(), req.query)
+    const features = new ApiFeature(Model.find(filter), req.query)
       .filter()
       .sort()
       .selectFields()

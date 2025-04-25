@@ -1,6 +1,11 @@
 const factory = require('./handlerFactory');
 const Card = require('./../models/cardModel');
 
+exports.getFavorites = (req, res, next) => {
+  ({ userId: req.user._id } = req.params);
+  next();
+};
+
 //Get All the Cards - No filter
 exports.getCards = factory.getAll(Card);
 
