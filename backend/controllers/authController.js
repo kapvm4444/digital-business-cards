@@ -159,7 +159,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 // forgot-password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   //get the email from the body
-  const { email, password } = req.body;
   //check if user with that email exists or not
   //get password reset token and set password reset token expire time of 20 mins [note: token is not hashed, need to hash in reset password]
   //send the email with the password reset link and send a message that token is sent in response
