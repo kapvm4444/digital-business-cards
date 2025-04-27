@@ -7,14 +7,15 @@ const User = require('./../models/userModel');
 //=>
 // get the details of the user for user profile
 exports.getMe = (req, res, next) => {
-  req.params.id = req.user.id;
+  req.params.id = req.user._id;
   next();
 };
 
 //=>
 // update the details of the user [not passwords]
 exports.updateMe = (req, res, next) => {
-  req.params.id = req.user.id;
+  req.params.id = req.user._id;
+  req.body.email = undefined;
   next();
 };
 
@@ -31,6 +32,11 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(id, {
     active: false,
     deletedAt: Date.now(),
+  });
+
+  res.status(204).json({
+    status: 'success',
+    message: 'User is deleted successfully',
   });
 });
 
@@ -77,5 +83,5 @@ exports.createUser = factory.createOne(User);
 
 exports.updateUser = factory.updateOne(User);
 
-//we are not deleting user we are simply deactivating it
+//we are not deleting user we are simply deactivating them so use delete-me
 /* exports.deleteUser = factory.deleteOne(User);*/

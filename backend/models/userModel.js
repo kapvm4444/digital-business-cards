@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator/es');
+const validator = require('validator');
 const bcrypt = require('bcrypt');
 
 //=>
@@ -24,12 +24,6 @@ const userSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Mobile number is required'],
       unique: [true, 'Mobile number already used'],
-      validate: [
-        () => {
-          return this.length === 10;
-        },
-        'please enter a valid mobile number',
-      ],
     },
     image: String,
     role: {

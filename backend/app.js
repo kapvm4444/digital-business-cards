@@ -1,18 +1,20 @@
-import path from 'node:path';
-
 const express = require('express');
 const morgan = require('morgan');
 
-import userRouter from './routers/userRouter';
-import cardRouter from './routers/cardRouter';
-import globalErrorHandler from './controllers/errorController';
-
+const userRouter = require('./routers/userRouter');
+const cardRouter = require('./routers/cardRouter');
+const globalErrorHandler = require('./controllers/errorController');
+const { join } = require('node:path');
+const requestIp = require('request-ip');
 //express app
 const app = express();
 
+//using the requestIp middleware for getting the IP of user
+app.use(requestIp.mw());
+
 //setting the view engine for rendering the email templates
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'email-views'));
+app.set('views', join(__dirname, 'email-views'));
 
 //development tool for the request log
 app.use(morgan('dev'));
@@ -30,7 +32,7 @@ app.use(express.static('public'));
 // api/v1/cards/:id     DELETE
 
 //=>
-// get user specific cards
+// get user specific cards (both add and remove favorite is implemented in cards router)
 // api/v1/cards/user-cards
 // for logged-in users which user ID is already at req.user.id and get the cards according to that user
 

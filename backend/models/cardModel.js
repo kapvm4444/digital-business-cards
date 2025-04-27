@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const validator = require('validator');
 const stateCollection = require('./../utils/stateCollection');
 const cityCollection = require('./../utils/cityCollection');
 

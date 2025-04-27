@@ -1,22 +1,11 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const Email = require('./../utils/email');
 const User = require('./../models/userModel');
 const { promisify } = require('util');
-
 const jwt = require('jsonwebtoken');
-
-//=>
-// signup -
-// login -
-// protect -
-// restrictTo -
-// create and send token -
-// me -
-// update-me -
-// delete-me -
-// forgot-password
-// reset-password
-// update-password
+const geoIp = require('geoip-lite');
+const { getClientIp } = require('request-ip');
 
 //=>
 // create JWT token
@@ -60,10 +49,18 @@ exports.signup = catchAsync(async (req, res, next) => {
   const userData = req.body;
 
   // save the data to database
-  const data = await User.create(userData);
+  const user = await User.create(userData);
+
+  const emailData = {
+    user,
+    link: `${process.env.DOMAIN}/profile`,
+  };
+
+  //send the email
+  await new Email(emailData).sendWelcome();
 
   // log in the user
-  createSendToken(data, req, res, 201);
+  createSendToken(user, req, res, 201);
 });
 
 //=>
@@ -80,10 +77,22 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.checkPassword(password, user.password)))
     return next(new AppError(401, 'Email or password incorrect'));
 
+  //get the user location
+  const clientIp = getClientIp(req);
+  const location = geoIp.lookup(clientIp);
+
+  //set the email data
+  const emailData = {
+    user,
+    location,
+    link: `${process.env.DOMAIN}/forget-password`,
+  };
+
+  //send the email
+  await new Email(emailData).sendLoginWarning();
+
   //log in with token
   createSendToken(user, req, res, 200);
-
-  //todo send the warning "some one logged in to your account"
 });
 
 //=>
@@ -154,9 +163,22 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = newPasswordConfirm;
   await user.save();
 
-  createSendToken(user, req, res, 200);
+  //get the user location
+  const clientIp = getClientIp(req);
+  const location = geoIp.lookup(clientIp);
 
-  //todo send the "password is updated" mail
+  //set the email data
+  const emailData = {
+    user,
+    location,
+    link: `${process.env.DOMAIN}/forgot-password`,
+  };
+
+  //send the email
+  await new Email(emailData).sendPasswordChangeWarning();
+
+  //send the response
+  createSendToken(user, req, res, 200);
 });
 
 //=>
@@ -176,7 +198,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     //send the email with the password reset link and send a message that token is sent in response
     const link = `${process.env.DOMAIN}/api/v1/users/reset-password/${passwordResetToken}`;
-    //todo send mail
+
+    //set email data
+    const emailData = {
+      user,
+      link,
+    };
+
+    await new Email(emailData).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',
@@ -230,6 +259,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetExpire = undefined;
   user.save();
 
-  // send the warning email
-  //todo send the warning mail
+  //set the email data
+  const emailData = {
+    user,
+    location,
+    link: `${process.env.DOMAIN}/forgot-password`,
+  };
+
+  //send the warning email
+  await new Email(emailData).sendPasswordChangeWarning();
 });

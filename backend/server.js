@@ -4,6 +4,7 @@ dotenv.config({ path: `${__dirname}/.env` });
 process.on('uncaughtException', (error) => {
   console.log(`SYNTAX ERROR`);
   console.log(`${error.name} => ${error.message}`);
+  console.log(`${error.stack}`);
   process.exit(1);
 });
 
