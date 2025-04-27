@@ -6,7 +6,9 @@ class Email {
     this.message = emailData.message;
     this.link = emailData.link;
     this.linkName = emailData.linkName;
-    this.toEmail = emailData.toEmail;
+    this.postDescription = emailData.postDescription;
+    this.toEmail = emailData.user.email;
+    this.fullName = emailData.user.name;
     this.subject = emailData.subject;
   }
 
@@ -34,7 +36,13 @@ class Email {
   async send(template) {
     // const template = ejs.render('<file-template-name>', {dynamic-values-object-like-links-and-stuff});
 
-    const text = `${this.message} \n${this.linkName}: \n${this.link}`;
+    const data = {
+      fullName: this.fullName,
+      message: this.message,
+      link: this.link,
+      linkText: this.linkName,
+      postDescription: this.postDescription,
+    };
 
     const mailOptions = {
       from: 'support@cardstream.com',
@@ -48,18 +56,18 @@ class Email {
 
   async sendWelcome() {
     //set the template and send the email for welcoming user
-    //await this.send('welcome')
+    //await this.send(<template-name>, <subject>)
   }
   async sendPasswordReset() {
     //set the template and send the email for sending the password reset link
-    //await this.send('passwordReset')
+    //await this.send(<template-name>, <subject>)
   }
   async sendLoginWarning() {
     //set the template and send the email for sending the login warning
-    //await this.send('loginWarn')
+    //await this.send(<template-name>, <subject>)
   }
   async sendPasswordChangeWarning() {
     //set the template and send the email for password change warning
-    //await this.send('PassChangeWarn')
+    //await this.send(<template-name>, <subject>)
   }
 }

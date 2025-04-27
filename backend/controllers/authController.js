@@ -82,6 +82,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //log in with token
   createSendToken(user, req, res, 200);
+
+  //todo send the warning "some one logged in to your account"
 });
 
 //=>
@@ -153,31 +155,81 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   createSendToken(user, req, res, 200);
+
+  //todo send the "password is updated" mail
 });
 
 //=>
 // forgot-password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   //get the email from the body
-  //check if user with that email exists or not
-  //get password reset token and set password reset token expire time of 20 mins [note: token is not hashed, need to hash in reset password]
-  //send the email with the password reset link and send a message that token is sent in response
-});
+  const { email } = req.body;
 
-//=>
-// check password reset token (middleware)
-exports.checkResetToken = catchAsync(async (req, res, next) => {
-  // get the token from url and hash the token
-  // crypto.createHash('sha-256').update(token).digest('hex')
-  // check if user with that token exists or not and also check if it is expired or not
-  next();
+  //check if user with that email exists or not
+  const user = await User.findOne({ email });
+  if (!user)
+    return next(new AppError(401, 'User with that email does not exist'));
+
+  //get password reset token and set password reset token expire time of 24 h [note: token is not hashed, need to hash in reset password]
+  try {
+    const passwordResetToken = user.getPasswordResetToken();
+
+    //send the email with the password reset link and send a message that token is sent in response
+    const link = `${process.env.DOMAIN}/api/v1/users/reset-password/${passwordResetToken}`;
+    //todo send mail
+
+    res.status(200).json({
+      status: 'success',
+      message:
+        'Password reset email is sent to your mail inbox, also check spam folders',
+    });
+  } catch (e) {
+    console.log(e.message);
+    user.passwordResetExpires = undefined;
+    user.passwordResetToken = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError(
+        'There was an error sending the email, please try again later',
+        500,
+      ),
+    );
+  }
 });
 
 //=>
 // reset-password
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  // get the user from the token
+  // get the token from url and hash the token
+  const { token } = req.params;
+
+  // crypto.createHash('sha-256').update(token).digest('hex')
+  const hashedToken = crypto.createHash('sha-256').update(token).digest('hex');
+
+  // check if user with that token exists or not and also check if it is expired or not
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpire: { $gt: Date.now() },
+  });
+  if (!user) return next(new AppError(401, 'Token is Invalid or Expired'));
+
   // get the data of new password and new password confirm from body
+  const { newPassword, newPasswordConfirm } = req.body;
+
   // check if password and confirm password are same or not
+  if (newPassword !== newPasswordConfirm)
+    return next(
+      new AppError(401, 'Password and Password-confirm must be same'),
+    );
+
   // update the password in user and save it (and send confirm msg in response)
+  user.password = newPassword;
+  user.passwordConfirm = newPasswordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpire = undefined;
+  user.save();
+
+  // send the warning email
+  //todo send the warning mail
 });
