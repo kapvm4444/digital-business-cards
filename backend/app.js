@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const userRouter = require('./routers/userRouter');
 const cardRouter = require('./routers/cardRouter');
@@ -11,6 +12,12 @@ const app = express();
 
 //using the requestIp middleware for getting the IP of user
 app.use(requestIp.mw());
+
+app.use(express.json({ limit: '20kb' }));
+
+app.use(cookieParser());
+
+// app.use(cookieParser());
 
 //setting the view engine for rendering the email templates
 app.set('view engine', 'ejs');

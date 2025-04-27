@@ -13,7 +13,7 @@ Router.route('/signup').post(authController.signup);
 
 //=>
 // /logout
-//todo pending task
+Router.route('/logout').get(authController.logout);
 
 //=>
 // /forgot-password

@@ -74,12 +74,14 @@ const userSchema = new mongoose.Schema(
 
 //=>
 //  Encrypting the password
-userSchema.pre('save', function (next) {
+userSchema.pre('save', async function (next) {
   //check if password is modified or not
   if (!this.isModified('password')) return next();
 
   //encrypt the password and empty the passwordConfirm
-  this.password = bcrypt.hash(this.password, 12);
+  console.log('hashing');
+  this.password = await bcrypt.hash(this.password, 12);
+  console.log('hashed');
   this.passwordConfirm = undefined;
 
   next();

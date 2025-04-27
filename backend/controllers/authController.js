@@ -34,7 +34,7 @@ const createSendToken = (userData, req, res, statusCode) => {
   res.cookie('jwt', token, cookieOptions);
 
   //send the response with token
-  res.status(statusCode).json({
+  res.status(201).json({
     status: 'success',
     token,
     data: userData,
@@ -57,7 +57,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   };
 
   //send the email
-  await new Email(emailData).sendWelcome();
+  // await new Email(emailData).sendWelcome();
 
   // log in the user
   createSendToken(user, req, res, 201);
@@ -77,9 +77,9 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.checkPassword(password, user.password)))
     return next(new AppError(401, 'Email or password incorrect'));
 
-  //get the user location
+  // get the user location
   const clientIp = getClientIp(req);
-  const location = geoIp.lookup(clientIp);
+  const location = geoIp.lookup('1.1.1.1');
 
   //set the email data
   const emailData = {
@@ -269,3 +269,14 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   //send the warning email
   await new Email(emailData).sendPasswordChangeWarning();
 });
+
+//=>
+// logout
+exports.logout = (req, res, next) => {
+  res.cookie('jwt', 'ABC', { expires: new Date(Date.now() - 36000000) });
+
+  res.status(201).json({
+    status: 'success',
+    message: 'Successfully logged out',
+  });
+};

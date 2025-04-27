@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
+const path = require('node:path');
 
 class Email {
   constructor(emailData) {
@@ -31,7 +32,10 @@ class Email {
   }
 
   async send(subject, data) {
-    let html = await ejs.renderFile('email', data);
+    let html = await ejs.renderFile(
+      path.join(__dirname, '/../email-views', 'email.ejs'),
+      data,
+    );
 
     const mailOptions = {
       from: 'support@cardstream.com',
@@ -51,7 +55,7 @@ class Email {
       message:
         'Welcome to the CardStream, This is a digital way of keeping your cards',
       link: this.link,
-      linkName: 'Start Using',
+      linkText: 'Start Using',
       postDescription: 'Upload your first card and get started',
     };
 
@@ -65,7 +69,7 @@ class Email {
       message:
         'Looks like you have forgot your password, here is the password reset link 🔗',
       link: this.link,
-      linkName: 'Reset Password',
+      linkText: 'Reset Password',
       postDescription:
         'This link will be valid for next 24 Hours! Make sure you reset it before that',
     };
@@ -77,10 +81,10 @@ class Email {
   async sendLoginWarning() {
     const data = {
       fullName: this.fullName,
-      message:
-        'You are just logged in to CardStream, If this is not you 😨 reset your password now!',
+      message: `You are just logged in to CardStream, If this is not you 😨 reset your password now!<br>
+      Near: ${this.location.city}, ${this.location.region}, ${this.location.country} [Timezone: ${this.location.timezone}]`,
       link: this.link,
-      linkName: 'Reset Password',
+      linkText: 'Reset Password',
       postDescription: 'If this is you, just ignore this email 😊.',
       location: this.location,
     };
@@ -95,8 +99,8 @@ class Email {
       message:
         'Your password is just reset, make sure you write it down 📝 and do not forgot next time! 😉',
       link: `${process.env.DOMAIN}/login`,
-      linkName: 'Login',
-      postDescription: `If this is not you 😦, Reset your password now.\n ${this.link}`,
+      linkText: 'Login',
+      postDescription: `If this is not you 😦, Reset your password now.<br> ${this.link}`,
       location: this.location,
     };
 
