@@ -3,6 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flow bite.min.js"></script>
     <title>Email from CardStream</title>
     <style media="all" type="text/css">
         /* -------------------------------------
@@ -157,7 +159,7 @@
             color: #ffffff;
         }
 
-        @media all {
+/*        @media all {
             .btn-primary table td:hover {
                 background-color: #ec0867 !important;
             }
@@ -165,7 +167,7 @@
                 background-color: #ec0867 !important;
                 border-color: #ec0867 !important;
             }
-        }
+        }*/
 
         /* -------------------------------------
         OTHER STYLES THAT MIGHT BE USEFUL
@@ -313,7 +315,7 @@
                             <p>This is an automated email, sent to keep you updated! 📧 </p>
                             <p>Here's what you need to know:</p>
                             <p>
-                                <%= message %>
+                                <%- message %>
                             </p>
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                 <tbody>
@@ -322,7 +324,7 @@
                                         <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                             <tbody>
                                             <tr>
-                                                <td> <a href="<%= link %>" target="_blank"><%= linkText %></a> </td>
+                                                <td> <a href="<%= link %>" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 " target="_blank"><%= linkText %></a> </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -330,7 +332,7 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <p><%= postDescription %></p>
+                            <p><%- postDescription %></p>
                             <p>Thank you so much for being with us!</p>
                             <p>Have an amazing day ahead! 🌟</p>
                         </td>

@@ -79,7 +79,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // get the user location
   const clientIp = getClientIp(req);
-  const location = geoIp.lookup('1.1.1.1');
+  const location = geoIp.lookup('8.8.8.8');
 
   //set the email data
   const emailData = {

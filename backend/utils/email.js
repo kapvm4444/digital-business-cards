@@ -79,10 +79,12 @@ class Email {
 
   //set the template and send the email for sending the login warning
   async sendLoginWarning() {
+    console.log(this.location);
+
     const data = {
       fullName: this.fullName,
-      message: `You are just logged in to CardStream, If this is not you 😨 reset your password now!<br>
-      Near: ${this.location.city}, ${this.location.region}, ${this.location.country} [Timezone: ${this.location.timezone}]`,
+      message: `You are just logged in to CardStream, If this is not you 😨 reset your password now!\n
+      Near: 🌎 ${this.location.city}, ${this.location.region}, ${this.location.country} [Timezone: ${this.location.timezone}]`,
       link: this.link,
       linkText: 'Reset Password',
       postDescription: 'If this is you, just ignore this email 😊.',
@@ -100,7 +102,7 @@ class Email {
         'Your password is just reset, make sure you write it down 📝 and do not forgot next time! 😉',
       link: `${process.env.DOMAIN}/login`,
       linkText: 'Login',
-      postDescription: `If this is not you 😦, Reset your password now.<br> ${this.link}`,
+      postDescription: `If this is not you 😦, Reset your password now.\n ${this.link}`,
       location: this.location,
     };
 

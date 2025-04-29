@@ -38,10 +38,7 @@ Router.route('/favorites').get(
   cardController.getCards,
 );
 
-Router.route('/add-favorite/:id').post(
-  authController.protect,
-  userController.setFavorites,
-);
+Router.route('/add-favorite/:id').post(userController.setFavorites);
 
 //Routes without any params [get-all, create]
 Router.route('/').get(cardController.getCards).post(cardController.createCard);
