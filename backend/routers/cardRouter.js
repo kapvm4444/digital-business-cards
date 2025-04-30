@@ -33,6 +33,11 @@ const Router = express.Router();
 
 Router.use(authController.protect);
 
+Router.route('/user-cards/').get(
+  cardController.setUserId,
+  cardController.getCards,
+);
+
 Router.route('/favorites').get(
   cardController.getFavorites,
   cardController.getCards,

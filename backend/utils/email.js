@@ -53,7 +53,7 @@ class Email {
     const data = {
       fullName: this.fullName,
       message:
-        'Welcome to the CardStream, This is a digital way of keeping your cards',
+        'Welcome to the CardStream,\nThis is a digital way of keeping your cards',
       link: this.link,
       linkText: 'Start Using',
       postDescription: 'Upload your first card and get started',
@@ -67,7 +67,7 @@ class Email {
     const data = {
       fullName: this.fullName,
       message:
-        'Looks like you have forgot your password, here is the password reset link 🔗',
+        'Looks like you have forgot your password,\nhere is the password reset link 🔗',
       link: this.link,
       linkText: 'Reset Password',
       postDescription:
@@ -83,8 +83,8 @@ class Email {
 
     const data = {
       fullName: this.fullName,
-      message: `You are just logged in to CardStream, If this is not you 😨 reset your password now!\n
-      Near: 🌎 ${this.location.city}, ${this.location.region}, ${this.location.country} [Timezone: ${this.location.timezone}]`,
+      message: `You are just logged in to CardStream,\nIf this is not you 😨\nreset your password now!\n
+      Near: ${this.location.city}, ${this.location.region}, ${this.location.country} [Timezone: ${this.location.timezone}] 🌎`,
       link: this.link,
       linkText: 'Reset Password',
       postDescription: 'If this is you, just ignore this email 😊.',
@@ -99,10 +99,10 @@ class Email {
     const data = {
       fullName: this.fullName,
       message:
-        'Your password is just reset, make sure you write it down 📝 and do not forgot next time! 😉',
+        'Your password is just reset,\nmake sure you write it down 📝\nand do not forgot next time! 😉',
       link: `${process.env.DOMAIN}/login`,
       linkText: 'Login',
-      postDescription: `If this is not you 😦, Reset your password now.\n ${this.link}`,
+      postDescription: `If this is not you 😦, Reset your password now.\n${this.link}`,
       location: this.location,
     };
 

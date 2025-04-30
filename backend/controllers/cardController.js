@@ -6,6 +6,11 @@ exports.getFavorites = (req, res, next) => {
   next();
 };
 
+exports.setUserId = (req, res, next) => {
+  ({ userId: req.user._id } = req.params);
+  next();
+};
+
 //Get All the Cards - No filter
 exports.getCards = factory.getAll(Card);
 
