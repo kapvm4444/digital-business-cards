@@ -58,6 +58,14 @@ app.use(express.static('public'));
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/cards', cardRouter);
 
+app.get('*', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message:
+      'Welcome to the CardStream APIs, this is just a Default message\n you are not accessing api right now',
+  });
+});
+
 app.use(globalErrorHandler);
 
 module.exports = app;
