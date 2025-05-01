@@ -79,8 +79,6 @@ class Email {
 
   //set the template and send the email for sending the login warning
   async sendLoginWarning() {
-    console.log(this.location);
-
     const data = {
       fullName: this.fullName,
       message: `You are just logged in to CardStream,\nIf this is not you 😨\nreset your password now!\n

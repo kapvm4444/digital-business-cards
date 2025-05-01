@@ -8,7 +8,6 @@ exports.getAll = (Model) =>
     //for getting the user specific favorites
     let filter = {};
     if (req.params.userId) filter = { ...filter, user: req.params.userId };
-    console.log(req.params.userId);
 
     // const docs = await Model.find();
     const features = new ApiFeature(Model.find(filter), req.query)
