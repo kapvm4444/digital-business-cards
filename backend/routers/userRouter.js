@@ -42,7 +42,12 @@ Router.route('/update-me').post(
   userController.updateUser,
 );
 
-Router.route('/delete-me').delete(userController.deleteMe);
+//=>
+// delete the user
+Router.route('/delete-me').delete(
+  userController.getMe,
+  userController.deleteMe,
+);
 
 //Note
 // middleware for restriction
