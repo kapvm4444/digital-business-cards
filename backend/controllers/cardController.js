@@ -2,12 +2,12 @@ const factory = require('./handlerFactory');
 const Card = require('./../models/cardModel');
 
 exports.getFavorites = (req, res, next) => {
-  ({ userId: req.user._id } = req.params);
+  req.params.userId = req.user._id;
   next();
 };
 
 exports.setUserId = (req, res, next) => {
-  ({ userId: req.user._id } = req.params);
+  req.params.userId = req.user._id;
   next();
 };
 
