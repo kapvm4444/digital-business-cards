@@ -16,7 +16,7 @@ const handleValidationErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
-  const value = err.errmsg.match(/(["'])(?:\\.|[^\\])*?\1/)[0];
+  const value = err.errmsg?.match(/(["'])(?:\\.|[^\\])*?\1/)[0];
   return new AppError(400, `Duplicate field value: ${value} use another value`);
 };
 

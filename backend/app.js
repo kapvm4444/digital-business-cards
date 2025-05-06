@@ -24,6 +24,7 @@ const app = express();
 //let express know we are using the json and set the limit of json data to 20kb
 app.use(express.json({ limit: '20kb' }));
 
+//cors custom headers
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Credentials', true);
@@ -32,11 +33,6 @@ app.use(function (req, res, next) {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, Content-Length, Authorization',
   );
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log(req.body);
   next();
 });
 
