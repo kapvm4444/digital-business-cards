@@ -21,6 +21,16 @@ const app = express();
 //using the requestIp middleware for getting the IP of user
 app.use(requestIp.mw());
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
+  next();
+});
+
 //cross-origin resource sharing
 app.use(
   cors({
