@@ -22,7 +22,13 @@ const app = express();
 app.use(requestIp.mw());
 
 //cross-origin resource sharing
-app.use(cors({ origin: '*' }));
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  }),
+);
 
 //helmet - it changes some http headers for security
 app.use(helmet());
