@@ -19,22 +19,31 @@ const requestIp = require('request-ip');
 const app = express();
 
 //using the requestIp middleware for getting the IP of user
-app.use(requestIp.mw());
+// app.use(requestIp.mw());
+
+//let express know we are using the json and set the limit of json data to 20kb
+app.use(express.json({ limit: '20kb' }));
 
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE, PUT');
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept',
+    'Origin, X-Requested-With, Content-Type, Accept, Content-Length, Authorization',
   );
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log(req.body);
   next();
 });
 
 //cross-origin resource sharing
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   }),
@@ -50,9 +59,6 @@ const limiter = rateLimit({
   message: 'Too many request at a time, Please try again after few hours',
 });
 /*app.use('/api', limiter);*/
-
-//let express know we are using the json and set the limit of json data to 20kb
-app.use(express.json({ limit: '20kb' }));
 
 //get the data from forms
 app.use(express.urlencoded({ extended: true, limit: '20kb' }));
