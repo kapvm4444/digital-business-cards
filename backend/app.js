@@ -25,7 +25,7 @@ const app = express();
 app.use(express.json({ limit: '20kb' }));
 
 //cors custom headers
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
   res.header(
     'Access-Control-Allow-Origin',
     'https://dbc.khush.pro,http://127.0.0.1:3000,http://loaclhost:3000',
@@ -37,9 +37,9 @@ app.use(function (req, res, next) {
     'Origin, X-Requested-With, Content-Type, Accept, Content-Length, Authorization',
   );
   next();
-});
+});*/
 
-/*app.use((req, res, next) => {
+app.use((req, res, next) => {
   // Remove all CORS restrictions
   res.removeHeader('X-Powered-By');
   res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -60,7 +60,7 @@ app.use(function (req, res, next) {
   }
 
   next();
-});*/
+});
 
 //cross-origin resource sharing
 app.use(
