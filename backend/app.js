@@ -37,18 +37,27 @@ app.use(express.json({ limit: '20kb' }));
 });*/
 
 //cross-origin resource sharing
+const allowedOrigins = [
+  'https://dbc.khush.pro',
+  'http://127.0.0.1:3000',
+  'http://loaclhost:3000',
+];
 app.use(
   cors({
-    origin: [
-      'https://dbc.khush.pro',
-      'http://127.0.0.1:3000',
-      'http://loaclhost:3000',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        const msg =
+          'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
   }),
 );
-
 //helmet - it changes some http headers for security
 app.use(helmet());
 
