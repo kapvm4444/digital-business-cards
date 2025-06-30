@@ -26,9 +26,10 @@ app.use(express.json({ limit: '20kb' }));
 
 //cors custom headers
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', [
-    ['https://dbc.khush.pro', 'http://127.0.0.1:3000', 'http://loaclhost:3000'],
-  ]);
+  res.header(
+    'Access-Control-Allow-Origin',
+    'https://dbc.khush.pro,http://127.0.0.1:3000,http://loaclhost:3000',
+  );
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE, PUT');
   res.header(
@@ -37,6 +38,29 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
+/*app.use((req, res, next) => {
+  // Remove all CORS restrictions
+  res.removeHeader('X-Powered-By');
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET,PUT,POST,DELETE,PATCH,OPTIONS,HEAD',
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    req.headers['access-control-request-headers'] || '*',
+  );
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  next();
+});*/
 
 //cross-origin resource sharing
 app.use(
