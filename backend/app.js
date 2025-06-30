@@ -66,8 +66,8 @@ app.use(express.json({ limit: '20kb' }));
 app.use(
   cors({
     origin: [
-      'https://dbc.khush.pro',
-      'http://127.0.0.1:3000',
+      /*      'https://dbc.khush.pro',
+      'http://127.0.0.1:3000',*/
       'http://loaclhost:3000',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
