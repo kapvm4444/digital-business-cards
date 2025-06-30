@@ -24,7 +24,7 @@ const app = express();
 //let express know we are using the json and set the limit of json data to 20kb
 app.use(express.json({ limit: '20kb' }));
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   console.log(
     `CORS: ${req.method} ${req.url} from ${req.headers.origin || 'no-origin'}`,
   );
@@ -48,7 +48,7 @@ app.use((req, res, next) => {
   }
 
   next();
-});
+});*/
 
 //cors custom headers
 /*app.use(function (req, res, next) {
@@ -65,18 +65,18 @@ app.use((req, res, next) => {
   next();
 });*/
 
-/*//cross-origin resource sharing
+//cross-origin resource sharing
 app.use(
   cors({
     origin: [
-      'https://dbc.khush.pro',
       'http://127.0.0.1:3000',
       'http://loaclhost:3000',
+      'https://dbc.khush.pro',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   }),
-);*/
+);
 
 //helmet - it changes some http headers for security
 app.use(helmet());
