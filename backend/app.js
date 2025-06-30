@@ -24,38 +24,9 @@ const app = express();
 //let express know we are using the json and set the limit of json data to 20kb
 app.use(express.json({ limit: '20kb' }));
 
-/*app.use((req, res, next) => {
-  console.log(
-    `CORS: ${req.method} ${req.url} from ${req.headers.origin || 'no-origin'}`,
-  );
-
-  // Set CORS headers for ALL responses
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header(
-    'Access-Control-Allow-Methods',
-    'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie',
-  );
-
-  // Handle preflight OPTIONS requests
-  if (req.method === 'OPTIONS') {
-    console.log('Handling preflight request');
-    return res.status(200).end(); // Return 200, not 204
-  }
-
-  next();
-});*/
-
 //cors custom headers
-/*app.use(function (req, res, next) {
-  res.header(
-    'Access-Control-Allow-Origin',
-    'https://dbc.khush.pro,http://127.0.0.1:3000,http://loaclhost:3000',
-  );
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE, PUT');
   res.header(
@@ -63,7 +34,7 @@ app.use(express.json({ limit: '20kb' }));
     'Origin, X-Requested-With, Content-Type, Accept, Content-Length, Authorization',
   );
   next();
-});*/
+});
 
 //cross-origin resource sharing
 app.use(
