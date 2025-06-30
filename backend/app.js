@@ -39,7 +39,7 @@ app.use(function (req, res, next) {
 //cross-origin resource sharing
 app.use(
   cors({
-    origin: 'http://127.0.0.1:3000',
+    origin: ['http://127.0.0.1:3000', 'http://loaclhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   }),
