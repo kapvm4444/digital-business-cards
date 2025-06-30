@@ -39,7 +39,7 @@ app.use(express.json({ limit: '20kb' }));
   next();
 });*/
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   // Remove all CORS restrictions
   res.removeHeader('X-Powered-By');
   res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
   }
 
   next();
-});
+});*/
 
 //cross-origin resource sharing
 app.use(
