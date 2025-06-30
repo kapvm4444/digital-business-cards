@@ -40,8 +40,8 @@ app.use(function (req, res, next) {
 app.use(
   cors({
     origin: [
-      'http://127.0.0.1:3000',
       'http://loaclhost:3000',
+      'http://127.0.0.1:3000',
       'https://dbc.khush.pro',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
