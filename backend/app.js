@@ -26,7 +26,7 @@ app.use(express.json({ limit: '20kb' }));
 
 //cors custom headers
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE, PUT');
   res.header(
@@ -39,7 +39,11 @@ app.use(function (req, res, next) {
 //cross-origin resource sharing
 app.use(
   cors({
-    origin: ['http://127.0.0.1:3000', 'http://loaclhost:3000'],
+    origin: [
+      'https://dbc.khush.pro',
+      'http://127.0.0.1:3000',
+      'http://loaclhost:3000',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   }),
